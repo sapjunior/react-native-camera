@@ -21,7 +21,7 @@ public class FaceDetectorUtils {
     return serializeFace(face, 1, 1, 0, 0, 0, 0);
   }
 
-  public static WritableMap serializeFace(Face face, double scaleX, double scaleY, int width, int height, int paddingLeft, int paddingTop) {
+  public static WritableMap serializeFace(Face face, double scaleX, double scaleY, int width, int height, int paddingLeft, int paddingTop, int cropX, int cropY) {
     WritableMap encodedFace = Arguments.createMap();
 
     encodedFace.putInt("faceID", face.getId());
@@ -104,7 +104,7 @@ public class FaceDetectorUtils {
     return face;
   }
 
-  public static WritableMap mapFromPoint(PointF point, double scaleX, double scaleY, int width, int height, int paddingLeft, int paddingTop) {
+  public static WritableMap mapFromPoint(PointF point, double scaleX, double scaleY, int width, int height, int paddingLeft, int paddingTop, int cropX, int cropY) {
     WritableMap map = Arguments.createMap();
     Float x = point.x;
     Float y = point.y;
