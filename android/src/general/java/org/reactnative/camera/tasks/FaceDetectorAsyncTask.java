@@ -92,10 +92,10 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
 
   private WritableArray serializeEventData(SparseArray<Face> faces) {
     WritableArray facesList = Arguments.createArray();
-    /*
+    
     for(int i = 0; i < faces.size(); i++) {
       Face face = faces.valueAt(i);
-      WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop, cropX, cropY);
+      WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop, mCropX, mCropY);
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
         serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
       } else {
@@ -103,7 +103,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
       }
       facesList.pushMap(serializedFace);
     }
-*/
+
     return facesList;
   }
 }

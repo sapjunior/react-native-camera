@@ -23,6 +23,10 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
   private byte[] mImageData;
   private int mWidth;
   private int mHeight;
+  private int mCropWidth;
+  private int mCropHeight;
+  private int mCropX;
+  private int mCropY;
   private int mRotation;
   private RNFaceDetector mFaceDetector;
   private FaceDetectorAsyncTaskDelegate mDelegate;
@@ -140,7 +144,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
     WritableArray facesList = Arguments.createArray();
 
     for (FirebaseVisionFace face : faces) {
-      WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop, cropX, cropY);
+      WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop, mCropX, mCropY);
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
         serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
       } else {
