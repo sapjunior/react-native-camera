@@ -252,6 +252,7 @@ type PropsType = typeof View.props & {
   onSubjectAreaChanged?: ({ nativeEvent: { prevPoint: {| x: number, y: number |} } }) => void,
   faceDetectionMode?: number,
   trackingEnabled?: boolean,
+  cropScanArea?: Array<number>,
   flashMode?: number | string,
   exposure?: number,
   barCodeTypes?: Array<string>,
@@ -395,6 +396,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
     barCodeTypes: PropTypes.arrayOf(PropTypes.string),
     googleVisionBarcodeType: PropTypes.number,
     googleVisionBarcodeMode: PropTypes.number,
+    cropScanArea: PropTypes.arrayOf(PropTypes.number),
     type: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     cameraId: PropTypes.string,
     flashMode: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -813,6 +815,11 @@ export default class Camera extends React.Component<PropsType, StateType> {
       newProps.textRecognizerEnabled = true;
     }
 
+    if (props.cropScanArea) {
+      newProps.cropScanAreaEnabled = true;
+      newProps.cropScanAreaSize = props.cropScanArea;
+    }
+    
     if (Platform.OS === 'ios') {
       delete newProps.googleVisionBarcodeMode;
       delete newProps.ratio;

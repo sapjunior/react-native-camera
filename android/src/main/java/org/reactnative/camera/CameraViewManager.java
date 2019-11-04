@@ -144,6 +144,21 @@ public class CameraViewManager extends ViewGroupManager<RNCameraView> {
     view.setShouldScanBarCodes(barCodeScannerEnabled);
   }
 
+  @ReactProp(name = "cropScanAreaEnabled")
+  public void setCropScanAreaEnabled(RNCameraView view, boolean cropScanAreaEnabled) {
+    view.setShouldCropScanArea(cropScanAreaEnabled);
+  }
+
+  @ReactProp(name = "cropScanAreaSize")
+  public void setCropScanAreaSize(RNCameraView view, ReadableArray cropScanAreaSize) {
+    if (cropScanAreaSize == null || cropScanAreaSize.size() != 2) {
+      return;
+    }
+
+    view.setCropScanAreaPercentageWidth(cropScanAreaSize.getDouble(0));
+    view.setCropScanAreaPercentageHeight(cropScanAreaSize.getDouble(1));
+  }
+
   @ReactProp(name = "useCamera2Api")
   public void setUseCamera2Api(RNCameraView view, boolean useCamera2Api) {
     view.setUsingCamera2Api(useCamera2Api);

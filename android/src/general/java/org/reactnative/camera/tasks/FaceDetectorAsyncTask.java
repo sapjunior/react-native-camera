@@ -18,6 +18,10 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
   private byte[] mImageData;
   private int mWidth;
   private int mHeight;
+  private int mCropWidth;
+  private int mCropHeight;
+  private int mCropX;
+  private int mCropY;
   private int mRotation;
   private RNFaceDetector mFaceDetector;
   private FaceDetectorAsyncTaskDelegate mDelegate;
@@ -39,11 +43,19 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
       int viewWidth,
       int viewHeight,
       int viewPaddingLeft,
-      int viewPaddingTop
+      int viewPaddingTop,
+      int cropWidth,
+      int cropHeight,
+      int cropX,
+      int cropY
   ) {
     mImageData = imageData;
     mWidth = width;
     mHeight = height;
+    mCropWidth = cropWidth;
+    mCropHeight = cropHeight;
+    mCropX = cropX;
+    mCropY = cropY;
     mRotation = rotation;
     mDelegate = delegate;
     mFaceDetector = faceDetector;
@@ -60,7 +72,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
       return null;
     }
 
-    RNFrame frame = RNFrameFactory.buildFrame(mImageData, mWidth, mHeight, mRotation);
+    RNFrame frame = RNFrameFactory.buildFrame(mImageData, mCropWidth, mCropHeight, mRotation);
     return mFaceDetector.detect(frame);
   }
 
@@ -83,7 +95,7 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Spar
 
     for(int i = 0; i < faces.size(); i++) {
       Face face = faces.valueAt(i);
-      WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop);
+      WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop, cropX, cropY);
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
         serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
       } else {

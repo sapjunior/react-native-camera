@@ -28,6 +28,10 @@ public class TextRecognizerAsyncTask extends android.os.AsyncTask<Void, Void, Sp
   private byte[] mImageData;
   private int mWidth;
   private int mHeight;
+  private int mCropWidth;
+  private int mCropHeight;
+  private int mCropX;
+  private int mCropY;
   private int mRotation;
   private ImageDimensions mImageDimensions;
   private double mScaleX;
@@ -47,13 +51,21 @@ public class TextRecognizerAsyncTask extends android.os.AsyncTask<Void, Void, Sp
           int viewWidth,
           int viewHeight,
           int viewPaddingLeft,
-          int viewPaddingTop
+          int viewPaddingTop,
+          int cropWidth,
+          int cropHeight,
+          int cropX,
+          int cropY
   ) {
     mDelegate = delegate;
     mThemedReactContext = themedReactContext;
     mImageData = imageData;
     mWidth = width;
     mHeight = height;
+    mCropWidth = cropWidth;
+    mCropHeight = cropHeight;
+    mCropX = cropX;
+    mCropY = cropY;
     mRotation = rotation;
     mImageDimensions = new ImageDimensions(width, height, rotation, facing);
     mScaleX = (double) (viewWidth) / (mImageDimensions.getWidth() * density);
@@ -68,7 +80,7 @@ public class TextRecognizerAsyncTask extends android.os.AsyncTask<Void, Void, Sp
       return null;
     }
     mTextRecognizer = new TextRecognizer.Builder(mThemedReactContext).build();
-    RNFrame frame = RNFrameFactory.buildFrame(mImageData, mWidth, mHeight, mRotation);
+    RNFrame frame = RNFrameFactory.buildFrame(mImageData, mCropWidth, mCropHeight, mRotation);
     return mTextRecognizer.detect(frame.getFrame());
   }
 
@@ -94,6 +106,14 @@ public class TextRecognizerAsyncTask extends android.os.AsyncTask<Void, Void, Sp
   }
 
   private WritableMap serializeText(Text text) {
+    int cropX = mCropX;
+    int cropY = mCropY;
+    // Crop x/y are relative to landscape mode, we have to invert them for portrait mode
+    if(mRotation == 90 || mRotation == -90) {
+      cropX = mCropY;
+      cropY = mCropX;
+    }
+
     WritableMap encodedText = Arguments.createMap();
 
     WritableArray components = Arguments.createArray();
@@ -104,8 +124,8 @@ public class TextRecognizerAsyncTask extends android.os.AsyncTask<Void, Void, Sp
 
     encodedText.putString("value", text.getValue());
 
-    int x = text.getBoundingBox().left;
-    int y = text.getBoundingBox().top;
+    int x = text.getBoundingBox().left + cropX;
+    int y = text.getBoundingBox().top + cropY;
 
     if (text.getBoundingBox().left < mWidth / 2) {
       x = x + mPaddingLeft / 2;
