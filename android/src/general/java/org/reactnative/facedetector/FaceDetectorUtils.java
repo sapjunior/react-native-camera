@@ -18,7 +18,7 @@ public class FaceDetectorUtils {
   };
 
   public static WritableMap serializeFace(Face face) {
-    return serializeFace(face, 1, 1, 0, 0, 0, 0);
+    return serializeFace(face, 1, 1, 0, 0, 0, 0, 0, 0);
   }
 
   public static WritableMap serializeFace(Face face, double scaleX, double scaleY, int width, int height, int paddingLeft, int paddingTop, int cropX, int cropY) {
@@ -39,12 +39,15 @@ public class FaceDetectorUtils {
     }
 
     for(Landmark landmark : face.getLandmarks()) {
-      encodedFace.putMap(landmarkNames[landmark.getType()], mapFromPoint(landmark.getPosition(), scaleX, scaleY, width, height, paddingLeft, paddingTop));
+      encodedFace.putMap(landmarkNames[landmark.getType()], mapFromPoint(landmark.getPosition(), scaleX, scaleY, width, height, paddingLeft, paddingTop, cropX, cropY));
     }
 
     WritableMap origin = Arguments.createMap();
-    Float x = face.getPosition().x;
-    Float y = face.getPosition().y;
+    Float x = face.getPosition().x + cropX;
+    Float y = face.getPosition().y  + cropY;
+    //Float x = face.getBoundingBox().exactCenterX() - (face.getBoundingBox().width() / 2 ) + cropX;
+    //Float y = face.getBoundingBox().exactCenterY() - (face.getBoundingBox().height() / 2) + cropY;
+    
     if (face.getPosition().x < width / 2) {
       x = x + paddingLeft / 2;
     } else if (face.getPosition().x > width / 2) {
